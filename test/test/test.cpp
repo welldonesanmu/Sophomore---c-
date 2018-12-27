@@ -140,8 +140,8 @@ bign bign::operator=(const string num)
 
 bool bign::operator<(const bign &num) const
 {
-    if (sign^num.sign)
-        return num.sign;
+    if (sign^num.sign)  // 如果符号不同
+        return num.sign; // 减数的符号就是结果
     if (len != num.len)
         return len < num.len;
     for (int i = len - 1; i >= 0; i--)
@@ -391,9 +391,9 @@ bign::~bign()
 bign num0,num1,res;
 
 int main() {
-    num0 = "22222222222222222222", num1 = "22222222222222222222";
-    res = num0/num1;
-	//res=num0-num1;
+    num0 = "2", num1 = "3";
+    //res = num0/num1;
+	res=num0-num1;
     cout << res << endl;
     return 0;
 }

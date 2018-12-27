@@ -11,11 +11,10 @@
 #include "iostream"
 
 using namespace std;
- 
 class Doublelong
 {
 public:
-	vector<int>s;   //  逆序存储
+	vector<long long int>s;   //  逆序存储
 	bool sign; //符号 1正数 0负数
 	static const int BASE = 100000000; // 设置分割数的大小
 	static const int WIDTH = 8; // 设置分割的位数
@@ -23,14 +22,67 @@ public:
 	Doublelong(long long num){*this = num;if(num >= 0)sign = 1;else sign = 0;}
 	Doublelong operator=(long long num);
 	Doublelong operator=(const string &str);
+	//重载数值判断
+	bool operator>(const Doublelong &) const;  // 传入的this指针是 const型的this指针
+    bool operator>=(const Doublelong &) const;
+    bool operator<(const Doublelong &) const;
+    bool operator<=(const Doublelong &) const;
+    bool operator==(const Doublelong &) const;
+    bool operator!=(const Doublelong &) const;
+	bool Judge(Doublelong x);
 	//重载四则运算
 	Doublelong operator+(Doublelong x);
 	Doublelong operator+=(Doublelong x);
 	Doublelong operator-(Doublelong x);
 	Doublelong operator-=(Doublelong x);
-	bool Judge(Doublelong x);
+	Doublelong operator*(Doublelong x);
+	Doublelong operator*(int x);
+	Doublelong operator*=(Doublelong x);
+	Doublelong operator/(Doublelong x);
+	Doublelong operator/=(Doublelong x);
 	void Display();
 };
+
+
+bool Doublelong::operator<(const Doublelong &x) const
+{
+	if (sign^x.sign)  // 如果符号不同
+        return x.sign; // 减数的符号就是结果
+	
+	if (s.size() != x.s.size())       //  如果长度不相同
+		return s.size() < x.s.size(); //  比较两数的长度
+
+	for (int i = 0; i < s.size(); i++) // 在符号相同 长度相同的情况下
+        if (s[s.size()-i-1] != x.s[s.size()-i-1])
+            return sign ? (s[s.size()-i-1] < x.s[s.size()-i-1]) : (!(s[s.size()-i-1] < x.s[s.size()-i-1]));
+    return !sign;  // 两个数完全相同的情况下
+}
+
+bool Doublelong::operator>(const Doublelong&num) const
+{
+    return num < *this;
+}
+
+bool Doublelong::operator<=(const Doublelong&num)const
+{
+    return !(*this > num);
+}
+
+bool Doublelong::operator>=(const Doublelong&num)const
+{
+    return !(*this < num);
+}
+
+bool Doublelong::operator!=(const Doublelong&num)const
+{
+    return *this > num || *this < num;
+}
+
+bool Doublelong::operator==(const Doublelong&num)const
+{
+    return !(num != *this);
+}
+
 
 Doublelong Doublelong::operator=(long long num)
 {	
@@ -53,24 +105,24 @@ Doublelong Doublelong::operator=(const string &str)  // 当超出long long 的范围用
 		string str_;
 		str_ = str.substr(1,str.length()-1);  // 提取出绝对值
 
-		int x,len = (str_.length() - 1) / WIDTH + 1;  //  length()不包含字符串结束符,-1只取科学计数的幂次， +1保证当小于8个时，即len 为运行次数
+		long long int x,len = (str_.length() - 1) / WIDTH + 1;  //  length()不包含字符串结束符,-1只取科学计数的幂次， +1保证当小于8个时，即len 为运行次数
 		for(int i = 0;i < len;i++)
 		{
 			int end = str_.length() - i*WIDTH;   //从后面开始取，一次取8位
 			int start = max(0,end - WIDTH);  //如果最后一次循环取的数不够8个0， 那么start就从0开始
-			sscanf(str_.substr(start,end-start).c_str(),"%d",&x);// 一次选9位存放在x中
+			sscanf(str_.substr(start,end-start).c_str(),"%lld",&x);// 一次选9位存放在x中
 			s.push_back(x);
 		} 
 		return *this;
 	}
 
 	else{  // 如果不是负数
-		int x,len = (str.length() - 1) / WIDTH + 1;  //  length()不包含字符串结束符,-1只取科学计数的幂次， +1保证当小于8个时，即len 为运行次数
+		long long int x,len = (str.length() - 1) / WIDTH + 1;  //  length()不包含字符串结束符,-1只取科学计数的幂次， +1保证当小于8个时，即len 为运行次数
 		for(int i = 0;i < len;i++)
 		{
 			int end = str.length() - i*WIDTH;   //从后面开始取，一次取8位
 			int start = max(0,end - WIDTH);  //如果最后一次循环取的数不够8个0， 那么start就从0开始
-			sscanf(str.substr(start,end-start).c_str(),"%d",&x);// 一次选9位存放在x中
+			sscanf(str.substr(start,end-start).c_str(),"%lld",&x);// 一次选9位存放在x中
 			s.push_back(x);
 		} 
 		return *this;
@@ -81,13 +133,12 @@ void Doublelong::Display()
 {
 	if(!sign)
 		cout<<"-";
-	vector<int>::iterator ite = s.begin();
+	vector<long long int>::iterator ite = s.begin();
 	for(;ite != s.end();++ite)
 	{
 		cout<<*ite;
 	}
 }
-
 
 
 ostream& operator<< (ostream &out,Doublelong x)  // 重载输出流
@@ -122,11 +173,11 @@ Doublelong  Doublelong::operator+(Doublelong x)
 	for(int i = 0,flag = 0;;i++)
 	{
 		if(flag == 0 && i >= x.s.size() && i >= s.size()) break;
-		int counter = flag;  // flag 是进位标志
+		long long int counter = flag;  // flag 是进位标志
 		if(i < x.s.size()) counter += x.s[i];
 		if(i < s.size()) counter += s[i];
 		temp.s.push_back(counter % BASE);
-		flag = counter / BASE;
+		flag = counter / BASE;  //进位数
 	}
 	return temp;
 }
@@ -137,19 +188,11 @@ Doublelong Doublelong::operator+=(Doublelong x)
 	return *this;
 }
 
-bool Doublelong::Judge(Doublelong x) // 大致判断哪个数字大
-{
-	if(s.size() > x.s.size()) return true; // 1表示本类的数字大
-	else if(s.size() < x.s.size()) return false;
-	else 
-		(s[0] - x.s[0])?true:false; // 1表示本类的数据大（如果分割位数相等，直接看最高位）
-}
-
 
 Doublelong Doublelong::operator-(Doublelong x)
 {
 	Doublelong b = x,a = *this;
-    if (!x.sign && !sign)  // 如果同时都是负数 
+    if (!b.sign && !sign)  // 如果同时都是负数 
     {
         b.sign = 1;
         a.sign = 1;
@@ -166,102 +209,29 @@ Doublelong Doublelong::operator-(Doublelong x)
         b = Doublelong(0)-(a+b);
         return b;
     }
-    if (a<b)
+    if (a < b)  // 两个数的绝对值比较大小
     {
-        bign c=(b-a);
-        c.sign=false;
+        Doublelong c = (b - a);
+        c.sign = false;
         return c;
     }
-    bign result;
-    result.len = 0;
-    for (int i = 0, g = 0; i < a.len; i++)
-    {
-        int x = a.s[i] - g;
-        if (i < b.len) x -= b.s[i];
-        if (x >= 0) g = 0;
-        else
-        {
-            g = 1;
-            x += 10;
-        }
-        result.s[result.len++] = x;
-    }
-    result.clean();
-    return result;
 
+	// 一系列操作保证了 被减数一定大于等于减数
+    Doublelong result;
+	result.s.clear();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	Doublelong temp;
-	temp.s.clear();
-	int len = min(x.s.size(),s.size());
-	int flag = 0;
-
-	if(Judge(x)) // 如果被减数大于减数
+	for(int i = 0,flag = 0;;i++)
 	{
-		for(int i = 0;;i++)	{
-			if(i>=x.s.size() && i>=s.size()) break;
-			int counter = flag;
-
-			if(i < s.size()) counter += s[i];
-			if(i < x.s.size()) counter -= x.s[i];
-			
-
-			if(counter >= 0){temp.s.push_back(counter);flag = 0;} //没有借位
-			else{
-				counter += 1e8;
-				temp.s.push_back(counter%static_cast<int>(1e8));
-				flag = -1;  // 借位 下一次计算-1
-			}
-		}
-		return temp;
+		if(i >= x.s.size() && i >= s.size()) break;
+		int counter = flag;  // flag 是借位标志
+		if(i < x.s.size()) counter -= x.s[i];
+		if(i < s.size()) counter += s[i];
+		result.s.push_back(counter % BASE);
+		if(flag < 0)  flag = -1;
+		else flag = 0;
 	}
-	
-	else{  //如果被减数小于减数
-		for(int i = 0;;i++)	{
-			if(i>=x.s.size()-1 && i>=s.size()-1) break;
-			int counter = flag;
-			//用减数减去被减数
-			if(i < x.s.size()) counter += x.s[i];
-			if(i < s.size()) counter -= s[i];
-				
-			if(counter >= 0){temp.s.push_back(counter);flag = 0;} //没有借位
-			else{
-				counter += 1e8;
-				temp.s.push_back(counter%static_cast<int>(1e8));
-				flag = -1;  // 借位 下一次计算-1
-			}
-		}
-		//最后一次单独处理
-
-
-		temp.s[temp.s.size()-1] = -temp.s[temp.s.size()-1]; // 最高位取反
-		return temp;
-	}
+	return result;
 }
-
-
 
 Doublelong Doublelong::operator-=(Doublelong x)
 {
@@ -269,6 +239,77 @@ Doublelong Doublelong::operator-=(Doublelong x)
 	return *this;
 }
 
+Doublelong Doublelong::operator*(Doublelong x)
+{
+	Doublelong result;
+	result.s.resize(128);// 两个64位相乘最多是128位
+
+	for(int i = 0; i < s.size(); i++)
+		for(int j = 0; j < x.s.size();j++){
+			if (i >= s.size() || i < 0) { cout << "vetcor下标越界" << endl; break; }
+			result.s[i + j] += s[i] * x.s[j];   //根据乘法竖式计算先计算出每个分割后的数字相乘的结果
+		}
+	int len = 0;
+	for(int i = 0;i < result.s.size(),result.s[i];i++)
+		len++;		// 找到第一个为0元素空间下标 
+	result.s.erase(result.s.begin()+len,result.s.end()-1);
+	for (int i = 0; i < len; i++)
+    {
+        result.s[i + 1] += result.s[i] / BASE;  // 加上进位
+        result.s[i] %= BASE;    // 留下剩下的部分
+    }
+	result.sign = !(sign^x.sign);
+	if(!result.s.back())   // 为0删掉（即意味着不为0保留） !!!!这个十分重要
+		result.s.erase(result.s.end()-1);
+	return result;
+}
+
+Doublelong Doublelong::operator*(int x)
+{ 
+	Doublelong temp1 = x;
+    Doublelong temp2 = *this;
+    return temp1*temp2;
+}
+
+
+Doublelong Doublelong::operator*=(Doublelong x)
+{
+	*this = *this * x;
+	return *this;
+}
+
+Doublelong Doublelong::operator/(Doublelong x)
+{
+	Doublelong result;
+	if(!(sign^x.sign) && !Judge(x))   // 当两个数符号相同的时候 并且被除数小于的时候
+	{  
+		result.sign = 1;
+		result.s.push_back(0);
+		return result;
+	}
+		 
+//	if(s < x.s){result.sign = 1;result.s.push_back(0);return result;}
+	int i = 1;
+	while(1){
+		if(sign == 1 && x*(-i) >= *this){result.s.push_back(i-1);result.sign = !(sign^x.sign);return result;}
+		if(sign == 0 &&x*(-i) <= *this){result.s.push_back(i-1);result.sign = !(sign^x.sign);return result;}
+		i++;
+	}
+}
+
+Doublelong Doublelong::operator/=(Doublelong x)
+{
+	*this = *this/x;
+	return *this;
+}
+
+bool Doublelong::Judge(Doublelong x) // 大致判断哪个数字大
+{
+	if(s.size() > x.s.size()) return true; // 1表示本类的数字大
+	else if(s.size() < x.s.size()) return false;
+	else 
+		return (s[0] - x.s[0])?true:false; // 1表示本类的数据大（如果分割位数相等，直接看最高位）
+}
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -281,12 +322,14 @@ int _tmain(int argc, _TCHAR* argv[])
 //	cin>>demo;
 //	cout<<demo;
 
-
-	Doublelong test; cin>>test;
-	Doublelong demo; cin>>demo;
-//	test -= demo;
-//	cout<<test;
-	cout<<test<<"+"<<demo<<"="<<(test+demo)<<endl;
+	//记得写一个随机生成64位数函数
+	Doublelong test;test="9999999988888888777777776666666655555555444444443333333322222222";
+//	cin>>test;
+	Doublelong demo;demo="-1111111122222222333333334444444455555555666666667777777788888888";
+//	cin>>demo;
+	Doublelong result = (test/demo);
+//	cout<<result<<endl;
+	cout<<(test /= demo)<<endl;
 
 
 	
