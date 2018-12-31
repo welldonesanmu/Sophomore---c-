@@ -1,0 +1,30 @@
+﻿生成启动时间为 2018/12/29 20:22:23。
+     1>项目“E:\program\github\Sophomore---c-\保留字统计\保留字统计\保留字统计.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug\保留字统计.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         所有输出均为最新。
+         f:\VS\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\保留字统计.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt "保留字统计.cpp"
+         保留字统计.cpp
+     1>e:\program\github\sophomore---c-\保留字统计\保留字统计\保留字统计.cpp(41): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 f:\vs\vc\include\string.h(105) : 参见“strcpy”的声明
+       ManifestResourceCompile:
+         所有输出均为最新。
+       Link:
+         f:\VS\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\program\github\Sophomore---c-\保留字统计\Debug\保留字统计.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\保留字统计.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\program\github\Sophomore---c-\保留字统计\Debug\保留字统计.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\program\github\Sophomore---c-\保留字统计\Debug\保留字统计.lib" /MACHINE:X86 "Debug\保留字统计.exe.embed.manifest.res"
+         Debug\stdafx.obj
+         "Debug\保留字统计.obj"
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\保留字统计.exe.embed.manifest" /manifest "Debug\保留字统计.exe.intermediate.manifest"
+         所有输出均为最新。
+       LinkEmbedManifest:
+         所有输出均为最新。
+         保留字统计.vcxproj -> E:\program\github\Sophomore---c-\保留字统计\Debug\保留字统计.exe
+       FinalizeBuildStatus:
+         正在删除文件“Debug\保留字统计.unsuccessfulbuild”。
+         正在对“Debug\保留字统计.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\program\github\Sophomore---c-\保留字统计\保留字统计\保留字统计.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:01.06

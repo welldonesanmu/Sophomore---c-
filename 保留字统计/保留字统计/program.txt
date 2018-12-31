@@ -1,0 +1,62 @@
+using namespace std;
+class Doublelong
+{
+public:
+	vector<long long int>s;   //  逆序存储
+	bool sign; //符号 1正数 0负数
+	static const int BASE = 100000000; // 设置分割数的大小
+	static const int WIDTH = 8; // 设置分割的位数
+	Doublelong(){sign = 1;}
+	Doublelong(long long num){*this = num;if(num >= 0)sign = 1;else sign = 0;}
+	Doublelong operator=(long long num);
+	Doublelong operator=(const string &str);
+	//重载数值判断
+	bool operator>(const Doublelong &) const;  // 传入的this指针是 const型的this指针
+    bool operator>=(const Doublelong &) const;
+    bool operator<(const Doublelong &) const;
+    bool operator<=(const Doublelong &) const;
+    bool operator==(const Doublelong &) const;
+    bool operator!=(const Doublelong &) const;
+	bool Judge(Doublelong x);
+	//重载四则运算
+	Doublelong operator+(Doublelong x);
+	Doublelong operator+=(Doublelong x);
+	Doublelong operator-(Doublelong x);
+	Doublelong operator-=(Doublelong x);
+	Doublelong operator*(Doublelong x);
+	Doublelong operator*(int x);
+	Doublelong operator*=(Doublelong x);
+	Doublelong operator/(Doublelong x);
+	Doublelong operator/=(Doublelong x);
+	void Display();
+};
+
+
+bool Doublelong::operator<(const Doublelong &x) const
+{
+	if (sign^x.sign)  // 如果符号不同
+        return x.sign; // 减数的符号就是结果
+	
+	if (s.size() != x.s.size())       //  如果长度不相同
+		return s.size() < x.s.size(); //  比较两数的长度
+
+	for (int i = 0; i < s.size(); i++) // 在符号相同 长度相同的情况下
+        if (s[s.size()-i-1] != x.s[s.size()-i-1])
+            return sign ? (s[s.size()-i-1] < x.s[s.size()-i-1]) : (!(s[s.size()-i-1] < x.s[s.size()-i-1]));
+    return !sign;  // 两个数完全相同的情况下
+}
+
+bool Doublelong::operator>(const Doublelong&num) const
+{
+    return num < *this;
+}
+
+bool Doublelong::operator<=(const Doublelong&num)const
+{
+    return !(*this > num);
+}
+
+bool Doublelong::operator>=(const Doublelong&num)const
+{
+    return !(*this < num);
+}
